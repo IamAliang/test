@@ -7,7 +7,7 @@ import com.ljl.service.StudentServiceImpl;
 import org.junit.Test;
 
 import java.util.ArrayList;
-
+@SuppressWarnings(value = "all")
 public class StudentController {
     private StudentService s=new StudentServiceImpl();
     @Test
