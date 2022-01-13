@@ -17,4 +17,9 @@ public class StudentController {
             System.out.println(stu.toString());
         }
     }
+    @Test
+    public void findById(){
+        Student stu = s.findById(2);
+        System.out.println(stu);
+    }
 }

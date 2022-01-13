@@ -66,7 +66,60 @@ public class StudentDaoImpl implements StudentDao{
 
     @Override
     public Student findById(Integer id) {
-        return null;
+         Student stu=new Student();
+        Connection con=null;
+        Statement sta=null;
+        ResultSet rs=null;
+        try {
+            //注册驱动
+            Class.forName("com.mysql.jdbc.Driver");
+            //获取数据库连接
+            con = DriverManager.getConnection("jdbc:mysql://192.168.20.129:3306/db12", "root", "123456");
+
+            //获取执行者对象
+            sta = con.createStatement();
+            //执行SQL语句并返回结果集
+            String sql="SELECT * FROM student WHERE sid='"+id+"'";
+            rs = sta.executeQuery(sql);
+
+            //处理结果集
+            while (rs.next()){
+                Integer sid = rs.getInt("sid");
+                String name = rs.getString("name");
+                Integer age = rs.getInt("age");
+                Date birthday = rs.getDate("birthday");
+
+               stu.setName(name);
+               stu.setSid(sid);
+                stu.setAge(age);
+                stu.setBirthday(birthday);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }finally {
+            if (con!=null){
+                try {
+                    con.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (sta!=null){
+                try {
+                    sta.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (rs!=null){
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return stu;
     }
 
     @Override
