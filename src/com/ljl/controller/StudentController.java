@@ -37,4 +37,28 @@ public class StudentController {
             System.out.println("添加失败");
 
     }
+
+    @Test
+    public void update(){
+
+        Student stu=new Student(2,"李四",16,new Date());
+        int result = s.update(stu);
+        if (result!=0){
+            System.out.println("修改成功");
+        }else
+            System.out.println("修改失败");
+
+    }
+    @Test
+    public  void delete(){
+        int sid=5;
+        int result = s.delete(sid);
+
+        if (result!=0){
+            System.out.println("删除成功");
+        }else
+            System.out.println("删除失败");
+
+    }
+
 }

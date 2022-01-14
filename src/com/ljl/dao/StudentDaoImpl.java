@@ -171,11 +171,86 @@ public class StudentDaoImpl implements StudentDao{
 
     @Override
     public int update(Student stu) {
-        return 0;
+       int result=0;
+        Connection connection=null;
+        Statement sta=null;
+        try{
+            Class.forName("com.mysql.jdbc.Driver");
+
+            connection = DriverManager.getConnection("jdbc:mysql://192.168.20.129:3306/db12", "root", "123456");
+             sta = connection.createStatement();
+            Date date = stu.getBirthday();
+            SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
+            String birthday = sdf.format(date);
+            String sql="UPDATE student SET  name='"+stu.getName()+"',age='"+stu.getAge()+"',birthday='"+birthday+"' WHERE sid='"+stu.getSid()+"'";
+
+           result= sta.executeUpdate(sql);
+
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }finally {
+            if (connection!=null){
+                try {
+                    connection.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+
+            }
+            if (sta!=null){
+                try {
+                    sta.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+
+        return result;
     }
 
     @Override
     public int delete(Integer id) {
-        return 0;
+        int result=0;
+        Connection connection=null;
+        Statement sta=null;
+        try{
+            Class.forName("com.mysql.jdbc.Driver");
+            connection = DriverManager.getConnection("jdbc:mysql://192.168.20.129:3306/db12", "root", "123456");
+            sta = connection.createStatement();
+
+            String sql="DELETE FROM student WHERE sid='"+id+"'";
+
+            result= sta.executeUpdate(sql);
+
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }finally {
+            if (connection!=null){
+                try {
+                    connection.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+
+            }
+            if (sta!=null){
+                try {
+                    sta.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return result;
+
+
+
+
+
+
     }
 }

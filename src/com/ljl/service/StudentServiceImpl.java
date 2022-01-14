@@ -8,6 +8,7 @@ import java.util.ArrayList;
 
 public class StudentServiceImpl implements StudentService{
     private StudentDao dao=new StudentDaoImpl();
+
     @Override
     public ArrayList<Student> findAll() {
         return dao.findAll();
@@ -25,11 +26,11 @@ public class StudentServiceImpl implements StudentService{
 
     @Override
     public int update(Student stu) {
-        return 0;
+        return dao.update(stu);
     }
 
     @Override
     public int delete(Integer id) {
-        return 0;
+        return dao.delete(id);
     }
 }
