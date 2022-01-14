@@ -5,9 +5,6 @@ import com.ljl.domain.Student;
 import com.ljl.service.StudentService;
 import com.ljl.service.StudentServiceImpl;
 import org.junit.Test;
-
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -41,7 +38,7 @@ public class StudentController {
     @Test
     public void update(){
 
-        Student stu=new Student(2,"李四",16,new Date());
+        Student stu=new Student(2,"李四四",36,new Date());
         int result = s.update(stu);
         if (result!=0){
             System.out.println("修改成功");

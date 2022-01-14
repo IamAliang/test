@@ -38,7 +38,7 @@ public class JDBCUtils {
         }
     }
     //提供获取数据库连接方法
-    private static Connection  getConnection(){
+    public static Connection  getConnection(){
 
         try{
             con=DriverManager.getConnection(url,root,password);
@@ -48,7 +48,7 @@ public class JDBCUtils {
         return con;
     }
     //释放资源
-    private static void close(Connection con, Statement sta, ResultSet rt){
+    public static void close(Connection con, Statement sta, ResultSet rt){
         if (con != null){
             try {
                 con.close();
@@ -70,7 +70,9 @@ public class JDBCUtils {
                 e.printStackTrace();
             }
         }
-    } private static void close(Connection con, Statement sta){
+    }
+
+    public static void close(Connection con, Statement sta){
         if (con != null){
             try {
                 con.close();
