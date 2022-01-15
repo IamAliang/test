@@ -20,7 +20,7 @@ public class StudentController {
     }
     @Test
     public void findById(){
-        Student stu = s.findById(2);
+        Student stu = s.findById(6);
         System.out.println(stu);
     }
     @Test
@@ -38,7 +38,7 @@ public class StudentController {
     @Test
     public void update(){
 
-        Student stu=new Student(2,"李四四",36,new Date());
+        Student stu=new Student(2,"李四",26,new Date());
         int result = s.update(stu);
         if (result!=0){
             System.out.println("修改成功");

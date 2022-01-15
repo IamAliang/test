@@ -48,7 +48,7 @@ public class JDBCUtils {
         return con;
     }
     //释放资源
-    public static void close(Connection con, Statement sta, ResultSet rt){
+    public static void close(Connection con, PreparedStatement ps, ResultSet rt){
         if (con != null){
             try {
                 con.close();
@@ -56,9 +56,9 @@ public class JDBCUtils {
                 e.printStackTrace();
             }
         }
-        if (sta != null){
+        if (ps != null){
             try {
-                sta.close();
+                ps.close();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -72,7 +72,7 @@ public class JDBCUtils {
         }
     }
 
-    public static void close(Connection con, Statement sta){
+    public static void close(Connection con, PreparedStatement ps){
         if (con != null){
             try {
                 con.close();
@@ -80,9 +80,9 @@ public class JDBCUtils {
                 e.printStackTrace();
             }
         }
-        if (sta != null){
+        if (ps != null){
             try {
-                sta.close();
+                ps.close();
             } catch (SQLException e) {
                 e.printStackTrace();
             }

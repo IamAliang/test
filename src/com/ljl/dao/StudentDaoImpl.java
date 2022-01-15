@@ -8,85 +8,82 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
-
-public class StudentDaoImpl implements StudentDao{
+@SuppressWarnings(value = "all")
+public class StudentDaoImpl implements StudentDao {
     @Override
     public ArrayList<Student> findAll() {
-        ArrayList<Student> list=new ArrayList<>();
-        Connection con=null;
-        Statement sta=null;
-        ResultSet rs=null;
+        ArrayList<Student> list = new ArrayList<>();
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
         try {
-           con= JDBCUtils.getConnection();
+            con = JDBCUtils.getConnection();
 
             //获取执行者对象
-            sta = con.createStatement();
 
-            //执行SQL语句并返回结果集
-            String sql="SELECT * FROM student";
-            rs = sta.executeQuery(sql);
-
+            String sql = "SELECT * FROM student";
+            ps = con.prepareStatement(sql);
+            rs = ps.executeQuery();
             //处理结果集
-            while (rs.next()){
+            while (rs.next()) {
                 Integer sid = rs.getInt("sid");
                 String name = rs.getString("name");
                 Integer age = rs.getInt("age");
                 Date birthday = rs.getDate("birthday");
-                Student stu=new Student(sid,name,age,birthday);
+                Student stu = new Student(sid, name, age, birthday);
                 list.add(stu);
             }
 
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
-        }finally {
-           JDBCUtils.close(con, sta, rs);
+        } finally {
+            JDBCUtils.close(con, ps, rs);
         }
         return list;
     }
 
     @Override
     public Student findById(Integer id) {
-         Student stu=new Student();
-        Connection con=null;
-        Statement sta=null;
-        ResultSet rs=null;
+        Student stu = new Student();
+        Connection con = null;
+        PreparedStatement sta = null;
+        ResultSet rs = null;
         try {
             //注册驱动
 
             //获取数据库连接
-            con= JDBCUtils.getConnection();
-
-            //获取执行者对象
-            sta = con.createStatement();
-            //执行SQL语句并返回结果集
-            String sql="SELECT * FROM student WHERE sid='"+id+"'";
-            rs = sta.executeQuery(sql);
-
+            con = JDBCUtils.getConnection();
+            String sql = "SELECT * FROM student WHERE sid=?";
+            sta = con.prepareStatement(sql);
+            sta.setInt(1, id);
+            rs = sta.executeQuery();
             //处理结果集
-            while (rs.next()){
+            while (rs.next()) {
                 Integer sid = rs.getInt("sid");
                 String name = rs.getString("name");
                 Integer age = rs.getInt("age");
                 Date birthday = rs.getDate("birthday");
 
-               stu.setName(name);
-               stu.setSid(sid);
+                stu.setName(name);
+                stu.setSid(sid);
                 stu.setAge(age);
                 stu.setBirthday(birthday);
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
-        }finally {
+        } finally {
             JDBCUtils.close(con, sta, rs);
+
         }
         return stu;
     }
 
     @Override
     public int insert(Student stu) {
-        int result=0;
-        Connection con=null;
-        Statement sta=null;
+        int result = 0;
+        Connection con = null;
+        PreparedStatement ps=null;
+
 
         try {
             //注册驱动
@@ -94,34 +91,25 @@ public class StudentDaoImpl implements StudentDao{
             //获取数据库连接
             con = DriverManager.getConnection("jdbc:mysql://192.168.20.129:3306/db12", "root", "123456");
 
-            //获取执行者对象
-            sta = con.createStatement();
-            //
+
             Date d = stu.getBirthday();
-            SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
             String birthday = sdf.format(d);
-            String sql="INSERT INTO student VALUES ('"+stu.getSid()+"','"+stu.getName()+"','"+stu.getAge()+"','"+birthday+"')";
+            String sql = "INSERT INTO student VALUES (?,?,?,?)";
+            ps= con.prepareStatement(sql);
+            ps.setInt(1, stu.getSid());
+            ps.setString(2, stu.getName());
+            ps.setInt(3, stu.getAge());
+            ps.setString(4, birthday);
+            result = ps.executeUpdate();
 
-            result = sta.executeUpdate(sql);
 
-
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
-        }finally {
-            if (con!=null){
-                try {
-                    con.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            }
-            if (sta!=null){
-                try {
-                    sta.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            }
+        } finally {
+            JDBCUtils.close(con, ps);
+
+
 
         }
         return result;
@@ -129,24 +117,28 @@ public class StudentDaoImpl implements StudentDao{
 
     @Override
     public int update(Student stu) {
-       int result=0;
-        Connection con=null;
-        Statement sta=null;
-        try{
-            con= JDBCUtils.getConnection();
-             sta = con.createStatement();
+        int result = 0;
+        Connection con = null;
+        PreparedStatement ps=null;
+        try {
+            con = JDBCUtils.getConnection();
+
             Date date = stu.getBirthday();
-            SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
             String birthday = sdf.format(date);
-            String sql="UPDATE student SET  name='"+stu.getName()+"',age='"+stu.getAge()+"',birthday='"+birthday+"' WHERE sid='"+stu.getSid()+"'";
+            String sql = "UPDATE student SET  name=?,age=?,birthday=? WHERE sid=?";
+             ps = con.prepareStatement(sql);
+             ps.setString(1, stu.getName());
+             ps.setInt(2, stu.getAge());
+             ps.setString(3, birthday);
+             ps.setInt(4, stu.getSid());
+            result = ps.executeUpdate();
 
-           result= sta.executeUpdate(sql);
 
-
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
-        }finally {
-           JDBCUtils.close(con,sta);
+        } finally {
+            JDBCUtils.close(con, ps);
         }
 
 
@@ -155,28 +147,26 @@ public class StudentDaoImpl implements StudentDao{
 
     @Override
     public int delete(Integer id) {
-        int result=0;
-        Connection con=null;
-        Statement sta=null;
-        try{
-            con= JDBCUtils.getConnection();
-            sta = con.createStatement();
+        int result = 0;
+        Connection con = null;
+        PreparedStatement ps=null;
 
-            String sql="DELETE FROM student WHERE sid='"+id+"'";
-
-            result= sta.executeUpdate(sql);
+        try {
+            con = JDBCUtils.getConnection();
 
 
-        }catch (Exception e){
+            String sql = "DELETE FROM student WHERE sid=?";
+             ps= con.prepareStatement(sql);
+             ps.setInt(1,id);
+             result = ps.executeUpdate();
+
+
+        } catch (Exception e) {
             e.printStackTrace();
-        }finally {
-            JDBCUtils.close(con,sta);
+        } finally {
+            JDBCUtils.close(con, ps);
         }
         return result;
-
-
-
-
 
 
     }
